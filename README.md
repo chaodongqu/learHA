@@ -7,7 +7,7 @@
 
 hacluster passwd qucd0701
 
-启动cluster
+##启动cluster
 开始是dead!!!
 
 [root@pcmk-1 network-scripts]# systemctl status  pacemaker.service 
