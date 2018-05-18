@@ -106,3 +106,11 @@ Daemon Status:
 以上说明 ClusterIp 工作在pcmk-2节点
 问题： pacemaker是基于整机的故障处理（必然kill httpd能够实现故障切换不？）
 
+
+
+# STONITH
+暂时没有测试，只是配置fencing enable 
+
+
+# Cluster file system (gf2)
+按照教程完成 比较简单（注意必须开启fencing )
