@@ -15,3 +15,61 @@ This is a temporary fix that will be overwritten if the package is upgraded.
 
 [root@pcmk-2 ~]# firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="192.168.11.125" port port="7789" protocol="tcp" accept'
 [root@pcmk-2 ~]# firewall-cmd --reload
+
+# fdisk  问题：
+<br>
+由于开始没有按照教程设置最小磁盘空间， 导致无法生成逻辑卷， 无法 lvcreate
+最后解决办法是：使用以下步骤
+<br> fdisk / pvcreate /  vgcreate <br>
+
+2： 新建一个分区（partition）
+
+新建一个主分区（primary partition）或逻辑分区（logical partition）都OK
+
+[root@getlnx20 ~]# fdisk /dev/sdb
+Device contains neither a valid DOS partition table, nor Sun, SGI or OSF disklabel
+Building a new DOS disklabel with disk identifier 0xaa12f277.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+ 
+Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
+ 
+WARNING: DOS-compatible mode is deprecated. It's strongly recommended to
+         switch off the mode (command 'c') and change display units to
+         sectors (command 'u').
+ 
+Command (m for help): n
+Command action
+   e   extended
+   p   primary partition (1-4)
+p
+Partition number (1-4): 1
+First cylinder (1-10443, default 1): 1
+Last cylinder, +cylinders or +size{K,M,G} (1-10443, default 10443): 
+Using default value 10443
+ 
+Command (m for help): w
+The partition table has been altered!
+ 
+Calling ioctl() to re-read partition table.
+Syncing disks.
+clip_image002
+
+3：创建PV（物理卷）
+
+[root@getlnx20 ~]# pvcreate /dev/sdb1
+  Physical volume "/dev/sdb1" successfully created
+[root@getlnx20 ~]# pvscan
+  PV /dev/sda2   VG VolGroup00   lvm2 [39.51 GiB / 0    free]
+  PV /dev/sdb1                   lvm2 [80.00 GiB]
+  Total: 2 [119.51 GiB] / in use: 1 [39.51 GiB] / in no VG: 1 [80.00 GiB]
+
+4：创建VG（卷组）
+
+[root@getlnx20 ~]# vgcreate -s 32M VolGroup01 /dev/sdb1
+  Volume group "VolGroup01" successfully created
+[root@getlnx20 ~]# vgscan
+  Reading all physical volumes.  This may take a while...
+  Found volume group "VolGroup01" using metadata type lvm2
+  Found volume group "VolGroup00" using metadata type lvm2
+clip_image003
