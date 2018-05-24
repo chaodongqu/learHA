@@ -114,3 +114,6 @@ Daemon Status:
 
 # Cluster file system (gf2)
 按照教程完成 比较简单（注意必须开启fencing )
+
+
+LFS
