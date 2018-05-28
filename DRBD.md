@@ -73,3 +73,30 @@ clip_image002
   Found volume group "VolGroup01" using metadata type lvm2
   Found volume group "VolGroup00" using metadata type lvm2
 clip_image003
+
+
+### DRBD 步骤(官网)
+1. prepare disk
+2. configure DRDB resource  [ such as wwdataq]
+3. create resourece [ drbdadm create-md wwwdata ]
+3a. Now, repeat the above commands on the second node. This time, when we check the status, it shows:
+
+note ::set primary....  drbdadm primary --force wwwdata
+
+4. use this disk(resource )
+mkfs.xfs /dev/drbd1
+mount /dev/drbd1 /mnt
+
+
+####公司DRBD
+1. prepare disk
+2. 配置 /etc/drbd.conf
+3. create DataBlock 
+/etc/sysconfig/modules --- > add DRBD
+drbdadm create-md ....
+
+3a. 然后在另一台机器上作同样的操作
+
+4. start service : /etc/rc.d/init.d/drbd start
+5. set primary 
+drbdsetup /dev/drbd0 primary -o
